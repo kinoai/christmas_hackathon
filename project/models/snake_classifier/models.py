@@ -1,6 +1,6 @@
 from efficientnet_pytorch import EfficientNet
-from torchvision import models
 from torch import nn
+from torchvision import models
 
 
 class EfficientNetPretrained(nn.Module):

@@ -1,9 +1,10 @@
+import argparse
 import shutil
-import pandas as pd
+import sys
 from os import mkdir
 from os.path import join
-import argparse
-import sys
+
+import pandas as pd
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--train_path", type=str, default="../data/train")

@@ -1,11 +1,10 @@
-from torch.utils.data import DataLoader, random_split
-from torchvision.transforms import transforms
-from torchvision.datasets import ImageFolder
 import pytorch_lightning as pl
 import torch
+from torch.utils.data import DataLoader, random_split
+from torchvision.datasets import ImageFolder
+from torchvision.transforms import transforms
 
 torch.manual_seed(42)
-
 
 
 class DataModule(pl.LightningDataModule):

@@ -57,3 +57,108 @@ MNIST_CLASSIFIER_V2:
     resume_training:
         checkpoint_path: None
         wandb_run_id: None
+
+SNAKE_CLASSIFIER:
+    trainer:
+        min_epochs: 1
+        max_epochs: 3
+        gradient_clip_val: 0.5
+        accumulate_grad_batches: 2
+        fast_dev_run: False
+        limit_train_batches: 1.0
+        limit_val_batches: 1.0
+        limit_test_batches: 1.0
+        val_check_interval: 1.0
+    model:
+        model_folder: "snake_classifier"
+        lr: 0.002
+        weight_decay: 0.00001
+        output_size: 35
+        lin1_size: 512
+        lin2_size: 256
+    dataset:
+        datamodule_folder: "snake_classification_datamodule"
+        batch_size: 128
+        train_val_split_ratio: 0.75
+        num_workers: 1
+        pin_memory: False
+    callbacks:
+        ConfusionMatrixLoggerCallback:
+            class_names: ['0',
+ '1',
+ '2',
+ '3',
+ '4',
+ '5',
+ '6',
+ '7',
+ '8',
+ '9',
+ '10',
+ '11',
+ '12',
+ '13',
+ '14',
+ '15',
+ '16',
+ '17',
+ '18',
+ '19',
+ '20',
+ '21',
+ '22',
+ '23',
+ '24',
+ '25',
+ '26',
+ '27',
+ '28',
+ '29',
+ '30',
+ '31',
+ '32',
+ '33',
+ '34']
+        MetricsHeatmapLoggerCallback:
+            class_names: ['0',
+ '1',
+ '2',
+ '3',
+ '4',
+ '5',
+ '6',
+ '7',
+ '8',
+ '9',
+ '10',
+ '11',
+ '12',
+ '13',
+ '14',
+ '15',
+ '16',
+ '17',
+ '18',
+ '19',
+ '20',
+ '21',
+ '22',
+ '23',
+ '24',
+ '25',
+ '26',
+ '27',
+ '28',
+ '29',
+ '30',
+ '31',
+ '32',
+ '33',
+ '34']
+    wandb:
+        group: "Snake Classifier"
+        tags: ["v1", "uwu"]
+        notes: "Snake classification Data Science Community Hackathon."
+    resume_training:
+        checkpoint_path: None
+        wandb_run_id: None

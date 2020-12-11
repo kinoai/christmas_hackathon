@@ -20,7 +20,7 @@ class DataModule(pl.LightningDataModule):
         self.pin_memory = hparams.get("pin_memory") or False
 
         self.transforms = transforms.Compose([
-                                transforms.Resize((128, 128)),
+                                transforms.Resize((1, 128)),
                                 transforms.ToTensor(),
                                 transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.2225))
                                              ])

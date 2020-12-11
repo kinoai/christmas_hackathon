@@ -2,6 +2,7 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 import torch.nn.functional as F
 import pytorch_lightning as pl
 import torch
+import torch.nn as nn
 
 # custom models
 from models.snake_classifier.models import *
@@ -11,11 +12,12 @@ class LitModel(pl.LightningModule):
 
     def __init__(self, hparams=None):
         super().__init__()
+        self.criterion = nn.CrossEntropyLoss()
 
         if hparams:
             self.save_hyperparameters(hparams)
 
-        self.model = EfficientNetPretrained(config=self.hparams)
+        self.model = ResnetPretrained(config=self.hparams)
 
     def forward(self, x):
         return self.model(x)
@@ -23,8 +25,8 @@ class LitModel(pl.LightningModule):
     # logic for a single training step
     def training_step(self, batch, batch_idx):
         x, y = batch
-        logits = self.model(x)
-        loss = F.nll_loss(logits, y)
+        logits = self.forward(x)
+        loss = self.criterion(logits, y)
 
         # training metrics
         preds = torch.argmax(logits, dim=1)
@@ -39,7 +41,7 @@ class LitModel(pl.LightningModule):
     def validation_step(self, batch, batch_idx):
         x, y = batch
         logits = self.model(x)
-        loss = F.nll_loss(logits, y)
+        loss = self.criterion(logits, y)
 
         # validation metrics
         preds = torch.argmax(logits, dim=1)

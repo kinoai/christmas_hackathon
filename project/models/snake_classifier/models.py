@@ -23,7 +23,6 @@ class EfficientNetPretrained(nn.Module):
             nn.ReLU(),
             nn.Dropout(p=0.2),
             nn.Linear(config["lin2_size"], config["output_size"]),
-            nn.LogSoftmax(dim=1)
         )
 
     def forward(self, x):
@@ -50,7 +49,6 @@ class ResnetPretrained(nn.Module):
             nn.ReLU(),
             nn.Dropout(p=0.2),
             nn.Linear(config["lin2_size"], config["output_size"]),
-            nn.LogSoftmax(dim=1)
         )
 
     def forward(self, x):

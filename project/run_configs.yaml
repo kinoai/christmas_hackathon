@@ -261,7 +261,7 @@ SNAKE_CLASSIFIER_V2:
  '33',
  '34']
     wandb:
-        group: "Snake Classifier"
+        group: "Snake Classifier V2"
         tags: ["v1", "uwu"]
         notes: "Snake classification Data Science Community Hackathon."
     resume_training:

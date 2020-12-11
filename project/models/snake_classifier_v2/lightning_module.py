@@ -51,20 +51,5 @@ class LitModel(pl.LightningModule):
         # we can return here anything and then read it in some callback
         return preds, y
 
-    # logic for a single testing step
-    def test_step(self, batch, batch_idx):
-        x, y = batch
-        logits = self.model(x)
-        loss = F.nll_loss(logits, y)
-
-        # test metrics
-        preds = torch.argmax(logits, dim=1)
-        preds, y = preds.cpu(), y.cpu()
-        acc = accuracy_score(preds, y)
-        self.log('test_loss', loss, on_step=False, on_epoch=True, logger=True, prog_bar=True)
-        self.log('test_acc', acc, on_step=False, on_epoch=True, logger=True, prog_bar=True)
-
-        return loss
-
     def configure_optimizers(self):
         return torch.optim.Adam(self.parameters(), lr=self.hparams.lr, weight_decay=self.hparams["weight_decay"])

@@ -1,24 +1,42 @@
+import torch
 from torch.utils.data import Dataset
 import os
+import csv
 
 
-class TestDataset(Dataset):
-    """
-        Example dataset class for loading images from folder.
-        'Dataset' classes can be used by 'DataModule' class.
-    """
+class CsvDataset(Dataset):
+    def __init__(self, csv_path, tokenizer, max_len):
+        self.tokenizer = tokenizer
+        self.max_len = max_len
+        self.data = None
 
-    def __init__(self, img_dir, transform):
-        self.transform = transform
-        self.images = [os.path.join(img_dir, fname) for fname in os.listdir(img_dir)]
-
-    def __getitem__(self, idx):
-        image = Image.open(self.images[idx]).convert("RGB")
-
-        if self.transform is not None:
-            image = self.transform(image)
-
-        return image
-
+        with open(csv_path) as csvfile:
+            self.data = list(csv.reader(csvfile))
+         
     def __len__(self):
-        return len(self.images)
+        return len(self.data)
+    
+    def __getitem__(self, idx):
+        if torch.is_tensor(idx):
+            idx = idx.tolist()
+
+        # ['id', 'comment_text', 'toxic', 'severe_toxic', 'obscene', 'threat', 'insult', 'identity_hate']
+        row = self.data[idx]
+        text = str(row[1])
+        target = row[2:]
+        
+        encoding = self.tokenizer.encode_plus(
+          text,
+          add_special_tokens=True,
+          max_length=self.max_len,
+        #   return_token_type_ids=True,
+          truncation=True,
+          padding='max_length',
+        #   return_attention_mask=True,
+          return_tensors='pt',
+        )    
+        # 'input_ids': (encoding['input_ids']).flatten()
+        # 'attention_mask': (encoding['attention_mask']).flatten()
+        # 'token_type_ids': (encoding['token_type_ids']).flatten()
+        print('==============\n', encoding['input_ids'])
+        return encoding, torch.tensor(target, dtype=torch.long)

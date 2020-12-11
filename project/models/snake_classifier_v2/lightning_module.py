@@ -1,16 +1,17 @@
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+from sklearn.metrics import accuracy_score
 import torch.nn.functional as F
 import pytorch_lightning as pl
 import torch
 
 # custom models
-from models.snake_classifier.models import *
+from models.snake_classifier_v2.models import *
 
 
 class LitModel(pl.LightningModule):
 
     def __init__(self, hparams=None):
         super().__init__()
+        self.criterion = nn.CrossEntropyLoss()
 
         if hparams:
             self.save_hyperparameters(hparams)
@@ -23,7 +24,7 @@ class LitModel(pl.LightningModule):
     # logic for a single training step
     def training_step(self, batch, batch_idx):
         x, y = batch
-        logits = self.model(x)
+        logits = self.forward(x)
         loss = F.nll_loss(logits, y)
 
         # training metrics
@@ -39,7 +40,7 @@ class LitModel(pl.LightningModule):
     def validation_step(self, batch, batch_idx):
         x, y = batch
         logits = self.model(x)
-        loss = F.nll_loss(logits, y)
+        loss = self.criterion(logits, y)
 
         # validation metrics
         preds = torch.argmax(logits, dim=1)
@@ -50,21 +51,6 @@ class LitModel(pl.LightningModule):
 
         # we can return here anything and then read it in some callback
         return preds, y
-
-    # logic for a single testing step
-    def test_step(self, batch, batch_idx):
-        x, y = batch
-        logits = self.model(x)
-        loss = F.nll_loss(logits, y)
-
-        # test metrics
-        preds = torch.argmax(logits, dim=1)
-        preds, y = preds.cpu(), y.cpu()
-        acc = accuracy_score(preds, y)
-        self.log('test_loss', loss, on_step=False, on_epoch=True, logger=True, prog_bar=True)
-        self.log('test_acc', acc, on_step=False, on_epoch=True, logger=True, prog_bar=True)
-
-        return loss
 
     def configure_optimizers(self):
         return torch.optim.Adam(self.parameters(), lr=self.hparams.lr, weight_decay=self.hparams["weight_decay"])

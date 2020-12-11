@@ -1,4 +1,4 @@
-num_of_gpus: 0
+num_of_gpus: 1
 
 loggers:
     wandb:
@@ -15,7 +15,7 @@ callbacks:
         mode: "max"
     early_stop:
         monitor: "val_acc"
-        patience: 100
+        patience: 5
         mode: "max"
 
 printing:

@@ -11,7 +11,9 @@ class CsvDataset(Dataset):
         self.data = None
 
         with open(csv_path) as csvfile:
-            self.data = list(csv.reader(csvfile))
+            reader = csv.reader(csvfile)
+            next(reader) # skip header row
+            self.data = list(reader)
          
     def __len__(self):
         return len(self.data)
@@ -23,7 +25,7 @@ class CsvDataset(Dataset):
         # ['id', 'comment_text', 'toxic', 'severe_toxic', 'obscene', 'threat', 'insult', 'identity_hate']
         row = self.data[idx]
         text = str(row[1])
-        target = row[2:]
+        target = [int(l) for l in row[2:]]
         
         encoding = self.tokenizer.encode_plus(
           text,
@@ -38,5 +40,4 @@ class CsvDataset(Dataset):
         # 'input_ids': (encoding['input_ids']).flatten()
         # 'attention_mask': (encoding['attention_mask']).flatten()
         # 'token_type_ids': (encoding['token_type_ids']).flatten()
-        print('==============\n', encoding['input_ids'])
         return encoding, torch.tensor(target, dtype=torch.long)

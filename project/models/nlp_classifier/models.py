@@ -18,4 +18,4 @@ class BertPretrainedClassification(nn.Module):
             param.requires_grad = False
 
     def forward(self, x):
-        return self.model(x)
+        return self.model(**x)

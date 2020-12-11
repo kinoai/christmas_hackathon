@@ -24,8 +24,6 @@ class LitModel(pl.LightningModule):
     def training_step(self, batch, batch_idx):
         x, y = batch
         logits = self.model(x)
-        print('==========\n', logits)
-        exit(1)
         loss = F.nll_loss(logits, y)
 
         # training metrics

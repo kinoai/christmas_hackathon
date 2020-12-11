@@ -2,9 +2,9 @@ num_of_gpus: 0
 
 loggers:
     wandb:
-        project: "project_template_test"
+        project: "christams_hackermoon_hackathon"
         entity: "kino"
-        log_model: True
+        log_model: false
         offline: False
 
 callbacks:

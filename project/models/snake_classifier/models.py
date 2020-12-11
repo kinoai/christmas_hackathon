@@ -36,8 +36,9 @@ class ResnetPretrained(nn.Module):
 
         self.model = models.resnet18(pretrained=True)
 
-        for param in self.model.parameters():
-            param.requires_grad = False
+        for name, param in self.model.named_parameters():
+            if ("bn" not in name):
+                param.requires_grad = False
 
         self.model.fc = nn.Sequential(
             nn.Linear(self.model.fc.in_features, config["lin1_size"]),

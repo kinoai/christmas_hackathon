@@ -16,7 +16,7 @@ class LitModel(pl.LightningModule):
         if hparams:
             self.save_hyperparameters(hparams)
 
-        self.model = ResnetPretrained(config=self.hparams)
+        self.model = EfficientNetPretrained(config=self.hparams)
 
     def forward(self, x):
         return self.model(x)
@@ -25,7 +25,7 @@ class LitModel(pl.LightningModule):
     def training_step(self, batch, batch_idx):
         x, y = batch
         logits = self.forward(x)
-        loss = self.criterion(logits, y)
+        loss = F.nll_loss(logits, y)
 
         # training metrics
         preds = torch.argmax(logits, dim=1)

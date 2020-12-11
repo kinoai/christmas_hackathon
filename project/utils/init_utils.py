@@ -86,14 +86,14 @@ def init_callbacks(project_config: dict, run_config: dict, use_wandb: bool) -> L
             mode=project_config["callbacks"]["early_stop"]["mode"],
         )
     ]
-    if use_wandb:
+    """  if use_wandb:
         callbacks.append(
             utils.callbacks.SaveCodeToWandbCallback(
                 base_dir=os.path.dirname(os.path.dirname(__file__)),
                 wandb_save_dir=os.path.join(os.path.dirname(os.path.dirname(__file__)), "logs"),
                 run_config=run_config
             )
-        )
+        )"""
 
     callbacks_config = run_config.get("callbacks", {})
     for conf in callbacks_config:

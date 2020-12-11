@@ -2,8 +2,6 @@
  
 # Christmas Hackermoon Hackathon    
 
-[![Conference](http://img.shields.io/badge/AnyConference-year-4b44ce.svg)](https://papers.nips.cc/book/advances-in-neural-information-processing-systems-31-2018)  
-
 </div>
 
 ## Description   

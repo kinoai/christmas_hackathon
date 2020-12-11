@@ -4,7 +4,7 @@ from torch.utils.data import DataLoader, random_split
 from torchvision.datasets import ImageFolder
 from torchvision.transforms import transforms
 
-torch.manual_seed(42)
+torch.manual_seed(666)
 
 
 class DataModule(pl.LightningDataModule):
@@ -12,22 +12,22 @@ class DataModule(pl.LightningDataModule):
     def __init__(self, hparams):
         super().__init__()
 
-        self.data_dir = hparams["data_dir"] + "/train"
+        self.data_dir = hparams["data_dir"] + "/snake_dataset/train"
         self.batch_size = hparams.get("batch_size") or 64
         self.train_val_split_ratio = hparams.get("train_val_split_ratio") or 0.9
         self.num_workers = hparams.get("num_workers") or 1
         self.pin_memory = hparams.get("pin_memory") or False
 
         self.transforms = transforms.Compose([
-                                transforms.Resize((128, 128)),
-                                transforms.ToTensor(),
-                                transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.2225))
-                                             ])
+            transforms.Resize((128, 128)),
+            transforms.ToTensor(),
+            transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
+         ])
         self.data_train = None
         self.data_val = None
 
-    def setup(self, stage = None):
-        trainset = ImageFolder(self.data_dir, transform = self.transforms)
+    def setup(self, stage=None):
+        trainset = ImageFolder(self.data_dir, transform=self.transforms)
         train_length = int(len(trainset) * self.train_val_split_ratio)
         val_length = len(trainset) - train_length
         train_val_split = [train_length, val_length]

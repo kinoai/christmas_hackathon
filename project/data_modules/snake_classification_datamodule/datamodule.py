@@ -18,11 +18,20 @@ class DataModule(pl.LightningDataModule):
         self.num_workers = hparams.get("num_workers") or 1
         self.pin_memory = hparams.get("pin_memory") or False
 
+        img_augmentation_transformations = [
+            # transforms.RandomAffine((-15, 15), translate=(0.2, 0.2)),
+            transforms.RandomHorizontalFlip(p=1.0),
+            transforms.RandomRotation((-15, 15)),
+            transforms.ColorJitter(hue=.05, saturation=.05),
+        ]
+
         self.transforms = transforms.Compose([
-            transforms.Resize((128, 128)),
+            transforms.Resize((112, 112)),
             transforms.ToTensor(),
+            transforms.RandomApply(img_augmentation_transformations, 0.5),
             transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
          ])
+
         self.data_train = None
         self.data_val = None
 

@@ -2,7 +2,6 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 import torch.nn.functional as F
 import pytorch_lightning as pl
 import torch
-import torch.nn as nn
 
 # custom models
 from models.snake_classifier.models import *

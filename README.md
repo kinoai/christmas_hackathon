@@ -1,6 +1,6 @@
 <div align="center">    
  
-# Christmas Hackermoon Hackathon    
+# Christmas Hackathon    
 
 </div>
 

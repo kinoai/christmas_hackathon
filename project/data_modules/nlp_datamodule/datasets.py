@@ -8,12 +8,23 @@ class CsvDataset(Dataset):
     def __init__(self, csv_path, tokenizer, max_len):
         self.tokenizer = tokenizer
         self.max_len = max_len
-        self.data = None
 
+        data = None
         with open(csv_path) as csvfile:
             reader = csv.reader(csvfile)
             next(reader) # skip header row
-            self.data = list(reader)
+            data = list(reader)
+
+        self.encodings = [self.tokenizer.encode_plus(
+          row[1],
+          add_special_tokens=True,
+          max_length=self.max_len,
+        #   return_token_type_ids=True,
+          truncation=True,
+          padding='max_length',
+        #   return_attention_mask=True,
+          return_tensors='pt',
+        ) for row in data]  
          
     def __len__(self):
         return len(self.data)
@@ -24,20 +35,9 @@ class CsvDataset(Dataset):
 
         # ['id', 'comment_text', 'toxic', 'severe_toxic', 'obscene', 'threat', 'insult', 'identity_hate']
         row = self.data[idx]
-        text = str(row[1])
         target = [int(l) for l in row[2:]]
-        
-        encoding = self.tokenizer.encode_plus(
-          text,
-          add_special_tokens=True,
-          max_length=self.max_len,
-        #   return_token_type_ids=True,
-          truncation=True,
-          padding='max_length',
-        #   return_attention_mask=True,
-          return_tensors='pt',
-        )    
+        encoding = self.encodings[idx]
         # 'input_ids': (encoding['input_ids']).flatten()
         # 'attention_mask': (encoding['attention_mask']).flatten()
         # 'token_type_ids': (encoding['token_type_ids']).flatten()
-        return encoding, torch.tensor(target, dtype=torch.long)
+        return {'input_ids': (encoding['input_ids']).flatten()}, torch.tensor(target, dtype=torch.float)
